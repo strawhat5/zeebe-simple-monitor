@@ -21,15 +21,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
 
-        <zeebe.version>0.21.0-alpha1</zeebe.version>
-        <spring.boot.version>2.1.2.RELEASE</spring.boot.version>
-        <hazelcast.exporter.version>0.6.0</hazelcast.exporter.version>
+        <zeebe.version>0.22.0-SNAPSHOT</zeebe.version>
+        <spring.boot.version>2.2.0.RELEASE</spring.boot.version>
+        <hazelcast.exporter.version>0.7.0-alpha1</hazelcast.exporter.version>
 
         <!-- release parent settings -->
-        <version.java>1.8</version.java>
+        <version.java>11</version.java>
         <nexus.snapshot.repository>https://app.camunda.com/nexus/content/repositories/zeebe-io-snapshots/
         </nexus.snapshot.repository>
         <nexus.release.repository>https://app.camunda.com/nexus/content/repositories/zeebe-io/
