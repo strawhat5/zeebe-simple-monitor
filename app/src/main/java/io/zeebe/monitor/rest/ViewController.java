@@ -265,6 +265,17 @@ public class ViewController {
     dto.setBpmnProcessId(instance.getBpmnProcessId());
     dto.setVersion(instance.getVersion());
 
+    if (instance.getParentElementInstanceKey() > 0) {
+      dto.setParentWorkflowInstanceKey(instance.getParentWorkflowInstanceKey());
+
+      workflowInstanceRepository
+          .findByKey(instance.getParentWorkflowInstanceKey())
+          .ifPresent(
+              parent -> {
+                dto.setParentBpmnProcessId(parent.getBpmnProcessId());
+              });
+    }
+
     final boolean isEnded = instance.getEnd() != null && instance.getEnd() > 0;
     dto.setState(instance.getState());
     dto.setRunning(!isEnded);

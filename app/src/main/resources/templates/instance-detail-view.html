@@ -5,34 +5,34 @@
 
 <div class="row">
 
-	<div class="col-md-12 mb-2">	
+	<div class="col-md-12 mb-2">
 		<div class="float-right">
-			
-			{{#instance.isRunning}}		
+
+			{{#instance.isRunning}}
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#setVariableModal">
 				  Set Variable
-				</button>	
-			
+				</button>
+
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cancelInstanceModal">
 				  Cancel Instance
-				</button>			
+				</button>
 			{{/instance.isRunning}}
-			
-			{{^instance.isRunning}}		
+
+			{{^instance.isRunning}}
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#setVariableModal" disabled>
 				  Set Variable
-				</button>	
-				
+				</button>
+
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cancelInstanceModal" disabled>
 				  Cancel Instance
-				</button>			
+				</button>
 			{{/instance.isRunning}}
-		
-		</div>		
+
+		</div>
 	</div>
 
 	<div class="col-md-2">
-		 		
+
  		<table class="table table-striped">
 		{{#instance}}
 			<tr>
@@ -65,17 +65,43 @@
 				<th>End Time</th>
 				<td>{{endTime}}</td>
 			</tr>
+
+			{{#hasParentWorkflowInstance}}
+
+				<tr>
+					<th>Parent Workflow Instance</th>
+					<td>
+						<a href="/views/instances/{{parentWorkflowInstanceKey}}">{{parentWorkflowInstanceKey}}</a>
+						({{parentBpmnProcessId}})
+					</td>
+				</tr>
+
+				<!--
+				<tr>
+					<th>Parent Workflow Instance Key</th>
+					<td>
+						<a href="/views/instances/{{parentWorkflowInstanceKey}}">{{parentWorkflowInstanceKey}}</a>
+					</td>
+				</tr>
+				<tr>
+					<th>Parent BPMN process id</th>
+					<td>{{parentBpmnProcessId}}</td>
+				</tr>
+				-->
+
+			{{/hasParentWorkflowInstance}}
+
 		{{/instance}}
-		</table>	
- 		
+		</table>
+
 	</div>
 
 	<div class="col-md-10 mb-2">
-		{{>components/bpmn-diagram}}						
-	</div>	
+		{{>components/bpmn-diagram}}
+	</div>
 
 	<div class="col-md-12">
-	
+
 		<nav>
 		  <div class="nav nav-tabs" id="nav-tab" role="tablist">
 		    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-variables" role="tab" aria-controls="nav-home" aria-selected="true">Variables</a>
@@ -111,9 +137,9 @@
 	   	<div class="tab-pane fade" id="nav-timers" role="tabpanel" aria-labelledby="nav-contact-tab">
 		  	{{>timer-list}}
 		  </div>
-		  
+
 		</div>
-	
+
 	</div>
 </div>
 
