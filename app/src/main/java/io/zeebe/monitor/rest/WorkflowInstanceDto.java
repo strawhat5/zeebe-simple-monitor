@@ -51,6 +51,7 @@ public class WorkflowInstanceDto {
   private List<JobDto> jobs = new ArrayList<>();
   private List<MessageSubscriptionDto> messageSubscriptions = new ArrayList<>();
   private List<TimerDto> timers = new ArrayList<>();
+  private List<CalledWorkflowInstanceDto> calledWorkflowInstances = new ArrayList<>();
 
   public int getPartitionId() {
     return partitionId;
@@ -230,5 +231,13 @@ public class WorkflowInstanceDto {
 
   public boolean hasParentWorkflowInstance() {
     return parentWorkflowInstanceKey != null && parentWorkflowInstanceKey > 0;
+  }
+
+  public List<CalledWorkflowInstanceDto> getCalledWorkflowInstances() {
+    return calledWorkflowInstances;
+  }
+
+  public void setCalledWorkflowInstances(List<CalledWorkflowInstanceDto> calledWorkflowInstances) {
+    this.calledWorkflowInstances = calledWorkflowInstances;
   }
 }

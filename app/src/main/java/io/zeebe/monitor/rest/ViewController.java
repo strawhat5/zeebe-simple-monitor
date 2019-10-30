@@ -265,6 +265,16 @@ public class ViewController {
     dto.setBpmnProcessId(instance.getBpmnProcessId());
     dto.setVersion(instance.getVersion());
 
+    final boolean isEnded = instance.getEnd() != null && instance.getEnd() > 0;
+    dto.setState(instance.getState());
+    dto.setRunning(!isEnded);
+
+    dto.setStartTime(Instant.ofEpochMilli(instance.getStart()).toString());
+
+    if (isEnded) {
+      dto.setEndTime(Instant.ofEpochMilli(instance.getEnd()).toString());
+    }
+
     if (instance.getParentElementInstanceKey() > 0) {
       dto.setParentWorkflowInstanceKey(instance.getParentWorkflowInstanceKey());
 
@@ -274,16 +284,6 @@ public class ViewController {
               parent -> {
                 dto.setParentBpmnProcessId(parent.getBpmnProcessId());
               });
-    }
-
-    final boolean isEnded = instance.getEnd() != null && instance.getEnd() > 0;
-    dto.setState(instance.getState());
-    dto.setRunning(!isEnded);
-
-    dto.setStartTime(Instant.ofEpochMilli(instance.getStart()).toString());
-
-    if (isEnded) {
-      dto.setEndTime(Instant.ofEpochMilli(instance.getEnd()).toString());
     }
 
     final List<String> completedActivities =
@@ -524,6 +524,27 @@ public class ViewController {
             .map(timer -> toDto(timer))
             .collect(Collectors.toList());
     dto.setTimers(timers);
+
+    final var calledWorkflowInstances =
+        workflowInstanceRepository.findByParentWorkflowInstanceKey(instance.getKey()).stream()
+            .map(
+                childEntity -> {
+                  final var childDto = new CalledWorkflowInstanceDto();
+
+                  childDto.setChildWorkflowInstanceKey(childEntity.getKey());
+                  childDto.setChildBpmnProcessId(childEntity.getBpmnProcessId());
+                  childDto.setChildState(childEntity.getState());
+
+                  childDto.setElementInstanceKey(childEntity.getParentElementInstanceKey());
+
+                  final var callElementId =
+                      elementIdsForKeys.getOrDefault(childEntity.getParentElementInstanceKey(), "");
+                  childDto.setElementId(callElementId);
+
+                  return childDto;
+                })
+            .collect(Collectors.toList());
+    dto.setCalledWorkflowInstances(calledWorkflowInstances);
 
     return dto;
   }
