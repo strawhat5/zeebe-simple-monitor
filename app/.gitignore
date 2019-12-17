@@ -13,7 +13,8 @@ hs_err_pid*
 /.classpath
 /.project
 /.settings
-/target
+/target/*
+!/target/*.jar
 
 # intellij
 .idea
