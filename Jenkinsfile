@@ -20,14 +20,9 @@ spec:
       effect: "NoSchedule"
   containers:
     - name: maven
-      image: maven:3.6.0-jdk-8
+      image: maven:3.6.0-jdk-11
       command: ["cat"]
       tty: true
-      env:
-        - name: JAVA_TOOL_OPTIONS
-          value: |
-            -XX:+UnlockExperimentalVMOptions
-            -XX:+UseCGroupMemoryLimitForHeap
       resources:
         limits:
           cpu: 1
@@ -75,7 +70,9 @@ spec:
       steps {
         checkout scm
         container('maven') {
-            sh 'mvn clean install -B -s .ci/settings.xml -DskipTests'
+          configFileProvider([configFile(fileId: 'maven-nexus-settings-zeebe', variable: 'MAVEN_SETTINGS_XML')]) {
+            sh 'mvn clean install -B -s $MAVEN_SETTINGS_XML -DskipTests'
+          }
         }
       }
     }
@@ -84,7 +81,9 @@ spec:
       when { not { expression { params.RELEASE } } }
       steps {
         container('maven') {
-            sh 'mvn install -B -s .ci/settings.xml'
+          configFileProvider([configFile(fileId: 'maven-nexus-settings-zeebe', variable: 'MAVEN_SETTINGS_XML')]) {
+            sh 'mvn install -B -s $MAVEN_SETTINGS_XML'
+          }
         }
       }
 
@@ -99,7 +98,9 @@ spec:
       when { not { expression { params.RELEASE } } }
       steps {
         container('maven') {
-            sh 'mvn -B -s .ci/settings.xml generate-sources source:jar javadoc:jar deploy -DskipTests'
+          configFileProvider([configFile(fileId: 'maven-nexus-settings-zeebe', variable: 'MAVEN_SETTINGS_XML')]) {
+            sh 'mvn -B -s $MAVEN_SETTINGS_XML generate-sources source:jar javadoc:jar deploy -DskipTests'
+          }
         }
 
         container('docker') {
@@ -123,14 +124,16 @@ spec:
 
       steps {
         container('maven') {
-          sshagent(['camunda-jenkins-github-ssh']) {
-            sh 'gpg -q --import ${GPG_PUB_KEY} '
-            sh 'gpg -q --allow-secret-key-import --import --no-tty --batch --yes ${GPG_SEC_KEY}'
-            sh 'git config --global user.email "ci@camunda.com"'
-            sh 'git config --global user.name "camunda-jenkins"'
-            sh 'mkdir ~/.ssh/ && ssh-keyscan github.com >> ~/.ssh/known_hosts'
-            sh 'mvn -B -s .ci/settings.xml -DskipTests source:jar javadoc:jar release:prepare release:perform -Prelease'
-            sh '.ci/scripts/github-release.sh'
+          configFileProvider([configFile(fileId: 'maven-nexus-settings-zeebe', variable: 'MAVEN_SETTINGS_XML')]) {
+            sshagent(['camunda-jenkins-github-ssh']) {
+                sh 'gpg -q --import ${GPG_PUB_KEY} '
+                sh 'gpg -q --allow-secret-key-import --import --no-tty --batch --yes ${GPG_SEC_KEY}'
+                sh 'git config --global user.email "ci@camunda.com"'
+                sh 'git config --global user.name "camunda-jenkins"'
+                sh 'mkdir ~/.ssh/ && ssh-keyscan github.com >> ~/.ssh/known_hosts'
+                sh 'mvn -B -s $MAVEN_SETTINGS_XML -DskipTests source:jar javadoc:jar release:prepare release:perform -Prelease'
+                sh '.ci/scripts/github-release.sh'
+            }
           }
         }
 
