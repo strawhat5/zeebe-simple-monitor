@@ -4,7 +4,7 @@
 
     <groupId>io.zeebe</groupId>
     <artifactId>zeebe-simple-monitor-root</artifactId>
-    <version>0.17.0-SNAPSHOT</version>
+    <version>0.18.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -22,9 +22,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <zeebe.version>0.22.0-alpha1</zeebe.version>
-        <spring.boot.version>2.2.2.RELEASE</spring.boot.version>
-        <hazelcast.exporter.version>0.7.0-alpha1</hazelcast.exporter.version>
+        <zeebe.version>0.22.0</zeebe.version>
+        <spring.boot.version>2.2.4.RELEASE</spring.boot.version>
+        <hazelcast.exporter.version>0.7.0</hazelcast.exporter.version>
 
         <!-- release parent settings -->
         <version.java>11</version.java>
