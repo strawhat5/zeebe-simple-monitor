@@ -200,13 +200,13 @@ public class ZeebeImportService {
             entity.setWorkflowKey(record.getWorkflowKey());
             entity.setBpmnElementType(record.getBpmnElementType().name());
 
-            LOGGER.debug("Saving WF Instance Entity: {} of Type: {}",
+            LOGGER.debug("Saving Element Instance Entity: {} of Type: {}",
                 	entity.getKey(), entity.getBpmnElementType());
             elementInstanceRepository.save(entity);
 
             notificationService.sendWorkflowInstanceUpdated(
                     record.getWorkflowInstanceKey(), record.getWorkflowKey());
-            LOGGER.debug("Saved and Published WF Instance Entity: {} of Type: {}",
+            LOGGER.debug("Saved and Published Element Instance Entity: {} of Type: {}",
             	entity.getKey(), entity.getBpmnElementType());
         }
     }
