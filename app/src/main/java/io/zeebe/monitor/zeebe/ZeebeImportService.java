@@ -82,9 +82,12 @@ public class ZeebeImportService {
         final int partitionId = record.getMetadata().getPartitionId();
 	LOGGER.debug("Importing Deployment Record: {} from partition# {} with intent: {}",
 		record.getMetadata().getKey(), partitionId, intent);
+	LOGGER.debug("Protocol.DEPLOYMENT_PARTITION: ", Protocol.DEPLOYMENT_PARTITION);
 	
-        if (intent != DeploymentIntent.CREATED  || partitionId != Protocol.DEPLOYMENT_PARTITION) {
+        if (intent != DeploymentIntent.CREATED /*|| partitionId != Protocol.DEPLOYMENT_PARTITION*/) {
             // ignore deployment event on other partitions to avoid duplicates
+            LOGGER.debug("Ignoring Deployment Record: {} from partition# {} with intent: {}",
+		record.getMetadata().getKey(), partitionId, intent);
             return;
         }
 
